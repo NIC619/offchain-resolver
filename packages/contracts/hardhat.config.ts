@@ -1,19 +1,16 @@
-const { task } = require("hardhat/config");
+import "@nomiclabs/hardhat-etherscan"
+import "@nomiclabs/hardhat-ethers"
+import "@nomiclabs/hardhat-waffle"
+import "hardhat-deploy"
+import "hardhat-deploy-ethers"
 
-require("@nomiclabs/hardhat-etherscan");
-require('@nomiclabs/hardhat-ethers');
-require('@nomiclabs/hardhat-waffle');
-require('hardhat-deploy');
-require('hardhat-deploy-ethers');
+import "tsconfig-paths/register"
 
-real_accounts = undefined;
+let real_accounts: string[] = [];
 if(process.env.DEPLOYER_KEY && process.env.OWNER_KEY) {
   real_accounts = [process.env.OWNER_KEY, process.env.DEPLOYER_KEY];
 }
 const gatewayurl = "https://offchain-resolver-example.uc.r.appspot.com/{sender}/{data}.json"
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
 
 module.exports = {
   solidity: "0.8.10",
@@ -63,4 +60,4 @@ module.exports = {
       default: 1,
     },
   }
-};
+}
