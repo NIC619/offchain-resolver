@@ -1,18 +1,38 @@
-import { ethers } from "hardhat"
-import { HardhatRuntimeEnvironment } from "hardhat/types"
-import { DeployFunction } from "hardhat-deploy/types"
+import { BigNumber, Overrides } from "ethers";
+import { ethers } from "hardhat";
+import * as utils from "~/scripts/utils";
+import * as ENSRegistry from "@ensdomains/ens/build/contracts/ENSRegistry.json";
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-    const { deploy } = hre.deployments
-    const signers = await ethers.getSigners()
-    const owner = signers[0].address
+async function main() {
+  const contractName = "ENSRegistry";
+  const owner = (await ethers.getSigners())[0];
 
-    await deploy("ENSRegistry", {
-        from: owner,
-        args: [],
-        log: true,
-    })
+  const overrides: Overrides = {
+    gasLimit: BigNumber.from(5000000),
+    maxFeePerGas: await (await ethers.provider.getFeeData()).maxFeePerGas!,
+    maxPriorityFeePerGas: await (
+      await ethers.provider.getFeeData()
+    ).maxPriorityFeePerGas!,
+  };
+
+  // Set deployment info
+  const contractInstance = await (
+    await ethers.getContractFactory(contractName, owner)
+  ).deploy(overrides);
+
+  // Deploy contract
+  await contractInstance.deployed();
+
+  // Write ENSRegistry contract JSON
+  utils.writeContractJson(contractName, {
+    address: contractInstance.address,
+    abi: ENSRegistry.abi,
+  });
 }
 
-export default func
-func.tags = ["test"]
+// We recommend this pattern to be able to use async/await everywhere
+// and properly handle errors.
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
