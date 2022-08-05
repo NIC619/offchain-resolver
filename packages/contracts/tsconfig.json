@@ -9,11 +9,10 @@
     "resolveJsonModule": true,
     "noImplicitAny": false,
     "outDir": "dist",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "~/*": ["*"]
+    }
   },
-  "include": [
-    "hardhat.config.ts",
-    "deploy/**/*",
-    "scripts/**/*"
-  ]
+  "include": ["hardhat.config.ts", "deploy/**/*", "scripts/**/*"]
 }
