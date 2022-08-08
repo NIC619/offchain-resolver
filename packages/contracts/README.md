@@ -9,10 +9,44 @@ These contracts can also be used as a starting point for other verification meth
 ## Contracts
 
 ### [IExtendedResolver.sol](contracts/IExtendedResolver.sol)
+
 This is the interface for wildcard resolution specified in ENSIP 10. In time this will likely be moved to the [@ensdomains/ens-contracts](https://github.com/ensdomains/ens-contracts) repository.
 
 ### [SignatureVerifier.sol](contracts/SignatureVerifier.sol)
+
 This library facilitates checking signatures over CCIP read responses.
 
 ### [OffchainResolver.sol](contracts/OffchainResolver.sol)
+
 This contract implements the offchain resolution system. Set this contract as the resolver for a name, and that name and all its subdomains that are not present in the ENS registry will be resolved via the provided gateway by supported clients.
+
+### Quickly start
+
+- Deploy ENSRegistry contract to Goerli Testnet
+
+```
+offchain-resolver % cd ./packages/contracts
+contracts % npx hardhat run ./deploy/00_ens.ts --network goerli
+```
+
+- Deploy OffchainResolver contract to Goerli Testnet
+
+```
+contracts % npx hardhat run ./deploy/10_offchain_resolver.ts --network goerli
+```
+
+- Set ENSRegistry contract `.eth` maindomain, `.test.eth` subdomain, and OffchainResolver contract address
+
+```
+contracts % npx hardhat run ./deploy/11_set_resolver.ts --network goerli
+```
+
+- Get ENSRegistry contract `.eth` maindomain, `.test.eth` subdomain, and OffchainResolver contract address
+
+```
+contracts % npx hardhat run ./deploy/12_get_resolver.ts --network goerli
+```
+
+### Problems
+
+- Cannot add ABI commit data when create contract ABI on Goerli Testnet, so remove the ABI commit data first.
