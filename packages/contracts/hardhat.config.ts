@@ -71,7 +71,7 @@ module.exports = {
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: `${ETHERSCAN_API_KEY}`,
   },
   namedAccounts: {
     signer: {
