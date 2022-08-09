@@ -20,7 +20,7 @@ This library facilitates checking signatures over CCIP read responses.
 
 This contract implements the offchain resolution system. Set this contract as the resolver for a name, and that name and all its subdomains that are not present in the ENS registry will be resolved via the provided gateway by supported clients.
 
-### Quickly start
+### Quick start
 
 #### Setup environment
 
