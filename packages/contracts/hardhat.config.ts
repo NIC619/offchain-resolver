@@ -2,8 +2,6 @@ import "dotenv/config";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
-import "hardhat-deploy";
-import "hardhat-deploy-ethers";
 import "tsconfig-paths/register";
 
 const real_accounts = {
