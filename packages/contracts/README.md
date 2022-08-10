@@ -32,7 +32,7 @@ yarn install && yarn build
 
 ```bash
 cd ./packages/contracts
-npx hardhat run ./scripts/deploy/00_ens.ts --network goerli
+npx hardhat run ./scripts/deploy/00_ENSRegistry.ts --network goerli
 ```
 
 - Example output:
@@ -57,7 +57,7 @@ https://goerli.etherscan.io/address/0xCAff8bDd1a730359C63Db8240e63184504C60B24#c
 #### Deploy OffchainResolver contract to Goerli Testnet
 
 ```bash
-npx hardhat run ./scripts/deploy/10_offchain_resolver.ts --network goerli
+npx hardhat run ./scripts/deploy/10_OffchainResolver.ts --network goerli
 ```
 
 - Example output:
@@ -68,7 +68,7 @@ Deploying OffchainResolver contract...
 OffchainResolver contract address: 0x76e099f303E23FD5A362563B955715aaADCf504F
 
 ✔ Verify contract on etherscan
-cmd : npx hardhat verify --network goerli --contract contracts/OffchainResolver.sol:OffchainResolver 0x76e099f303E23FD5A362563B955715aaADCf504F --constructor-args ./scripts/goerli/deployments/OffchainResolverVerifyArguments.ts ? … yes
+cmd : npx hardhat verify --network goerli --contract contracts/OffchainResolver.sol:OffchainResolver 0x76e099f303E23FD5A362563B955715aaADCf504F --constructor-args ./scripts/goerli/deployments/10_OffchainResolverVerifyArguments.ts ? … yes
 Nothing to compile
 
 Successfully submitted source code for contract
@@ -82,7 +82,7 @@ https://goerli.etherscan.io/address/0x76e099f303E23FD5A362563B955715aaADCf504F#c
 #### Set ENSRegistry contract `token.eth` maindomain, and corresponding OffchainResolver contract address
 
 ```bash
-npx hardhat run ./scripts/operating/offchain-resolver/11_set_resolver.ts --network goerli
+npx hardhat run ./scripts/operating/OffchainResolver/00_SetResolver.ts --network goerli
 ```
 
 - Example output:
@@ -100,7 +100,7 @@ Set fulldomain "token.eth" resolver TX: https://goerli.etherscan.io/tx/0x5eb3f5b
 #### Get ENSRegistry contract `token.eth` maindomain, and corresponding OffchainResolver contract address
 
 ```bash
-% npx hardhat run ./scripts/operating/offchain-resolver/12_get_resolver.ts --network goerli
+% npx hardhat run ./scripts/operating/OffchainResolver/01_GetResolver.ts --network goerli
 ```
 
 - Example output:
