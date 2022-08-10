@@ -47,7 +47,7 @@ async function main() {
   });
 
   // Verify contract
-  const verifyCmd = `npx hardhat verify --network ${network.name} --contract contracts/OffchainResolver.sol:OffchainResolver ${contractInstance.address} --constructor-args ./scripts/${network.name}/deployments/10_OffchainResolverVerifyArguments.ts`;
+  const verifyCmd = `npx hardhat verify --network ${network.name} --contract contracts/OffchainResolver.sol:OffchainResolver ${contractInstance.address} --constructor-args ./scripts/${network.name}/deployments/OffchainResolverVerifyArguments.ts`;
   await utils.verifyContract(verifyCmd);
 }
 
