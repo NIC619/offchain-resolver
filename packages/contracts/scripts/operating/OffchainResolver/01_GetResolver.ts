@@ -16,23 +16,25 @@ async function main() {
   );
 
   const ethDomain = "eth";
-  const manDomain = "token";
-  const fulDomain = `${manDomain}.${ethDomain}`;
+  const mainDomain = "token";
+  const fullDomain = `${mainDomain}.${ethDomain}`;
 
   // Get maindomain owner
   const subDomainData = ethers.utils.keccak256(
     ethers.utils.solidityPack(
       ["bytes32", "bytes32"],
-      [ethers.utils.namehash(ethDomain), ethers.utils.id(manDomain)]
+      [ethers.utils.namehash(ethDomain), ethers.utils.id(mainDomain)]
     )
   );
   const subDomainOwner = await ensRegiContract.owner(subDomainData);
-  console.log(`Get maindomain \"${manDomain}\" Owner: ${subDomainOwner}`);
+  console.log(`Get maindomain \"${mainDomain}\" Owner: ${subDomainOwner}`);
 
   // Get fulldomain resolver
-  const fulDomainData = ethers.utils.namehash(fulDomain);
+  const fulDomainData = ethers.utils.namehash(fullDomain);
   const fulDomainResolver = await ensRegiContract.resolver(fulDomainData);
-  console.log(`Get fulldomain \"${fulDomain}\" Resolver: ${fulDomainResolver}`);
+  console.log(
+    `Get fulldomain \"${fullDomain}\" Resolver: ${fulDomainResolver}`
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

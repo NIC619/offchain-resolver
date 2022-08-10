@@ -38,8 +38,8 @@ async function main() {
   };
 
   const ethDomain = "eth";
-  const manDomain = "token";
-  const fulDomain = `${manDomain}.${ethDomain}`;
+  const mainDomain = "token";
+  const fullDomain = `${mainDomain}.${ethDomain}`;
 
   let tx: providers.TransactionResponse;
   let txReceipt: providers.TransactionReceipt;
@@ -47,24 +47,24 @@ async function main() {
   // Set maindomain owner
   tx = await ensRegiContract.connect(deployer).setSubnodeOwner(
     ethers.utils.namehash(ethDomain), // Compute the namehash of ensName
-    ethers.utils.id(manDomain), // Compute the keccak256 cryptographic hash
+    ethers.utils.id(mainDomain), // Compute the keccak256 cryptographic hash
     ownerAddress,
     overrides
   );
   txReceipt = await tx.wait(); // Wait for transaction to confirm that block has been mined
   console.log(
-    `Set maindomain \"${manDomain}\" owner TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
+    `Set maindomain \"${mainDomain}\" owner TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
   );
 
   // Set fulldomain resolver
   tx = await ensRegiContract.connect(deployer).setResolver(
-    ethers.utils.namehash(fulDomain), // Compute the namehash of ensName
+    ethers.utils.namehash(fullDomain), // Compute the namehash of ensName
     offResvContract.address,
     overrides
   );
   txReceipt = await tx.wait(); // Wait for transaction to confirm that block has been mined
   console.log(
-    `Set fulldomain \"${fulDomain}\" resolver TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
+    `Set fulldomain \"${fullDomain}\" resolver TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
   );
 }
 
