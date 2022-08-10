@@ -65,6 +65,26 @@ export function writeContractJson(contractName: string, content) {
   }
 }
 
+export async function verifyContract(cmd: string) {
+  const promptResult = await prompts(
+    {
+      type: "confirm",
+      name: "doVerify",
+      message: `Verify contract on etherscan (If fails, please execute this cmd again)\ncmd : ${cmd} ?`,
+    },
+    {
+      onCancel: async function () {
+        console.log("Exit process");
+        process.exit(0);
+      },
+    }
+  );
+
+  if (promptResult.doVerify) {
+    execSync(cmd, { stdio: "inherit" });
+  }
+}
+
 /*********************************
  *     Same as private repo      *
  *********************************/
@@ -124,24 +144,4 @@ export async function confirmNextContractAddr(deployer: Signer) {
   }
 
   return;
-}
-
-export async function verifyContract(cmd: string) {
-  const promptResult = await prompts(
-    {
-      type: "confirm",
-      name: "doVerify",
-      message: `Verify contract on etherscan\ncmd : ${cmd} ?`,
-    },
-    {
-      onCancel: async function () {
-        console.log("Exit process");
-        process.exit(0);
-      },
-    }
-  );
-
-  if (promptResult.doVerify) {
-    execSync(cmd, { stdio: "inherit" });
-  }
 }
