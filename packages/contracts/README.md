@@ -92,9 +92,11 @@ ENSRegistry contract on etherscan: https://goerli.etherscan.io/address/0xCAff8bD
 
 OffchainResolver contract on etherscan: https://goerli.etherscan.io/address/0x76e099f303E23FD5A362563B955715aaADCf504F
 
-Set maindomain "token" owner TX: https://goerli.etherscan.io/tx/0x836a8b219b7583b495315b6299a1d50aff80793f32d95ee356d9489976f3c1bb
+Set ethdomain "eth" owner, TX: https://goerli.etherscan.io/tx/0xd43a76115cf59dcd4f74d46c6bc8953d71d87da720625724a71140850f2af9d9
 
-Set fulldomain "token.eth" resolver TX: https://goerli.etherscan.io/tx/0x5eb3f5bb9c7b9e3499737fab5c2fb171e0730c7d84cacb1aa40ec60c16e87bad
+Set maindomain "token" owner, TX: https://goerli.etherscan.io/tx/0x595ccaf6bd326d2b49b3ee1fc6d36506ac0d1ad8b211dc424379e7bf13b1f763
+
+Set fulldomain "token.eth" resolver contract, TX: https://goerli.etherscan.io/tx/0xf55372d46eef15afc1326df8c67be7dc2be5d71ac6e0768de47ef609d6562d4a
 ```
 
 #### Get ENSRegistry contract `token.eth` maindomain, and corresponding OffchainResolver contract address
@@ -108,7 +110,9 @@ Set fulldomain "token.eth" resolver TX: https://goerli.etherscan.io/tx/0x5eb3f5b
 ```
 ENSRegistry contract on etherscan: https://goerli.etherscan.io/address/0xCAff8bDd1a730359C63Db8240e63184504C60B24
 
-Get maindomain "token" Owner: 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
+Get ethdomain "eth" owner: 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
 
-Get fulldomain "token.eth" Resolver: 0x76e099f303E23FD5A362563B955715aaADCf504F
+Get maindomain "token" owner: 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
+
+Get fulldomain "token.eth" resolver contract: 0x76e099f303E23FD5A362563B955715aaADCf504F
 ```

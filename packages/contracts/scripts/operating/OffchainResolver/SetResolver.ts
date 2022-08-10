@@ -4,7 +4,8 @@ import * as utils from "~/scripts/utils";
 
 async function main() {
   const addrRecord = await utils.openAddrRecord();
-  const deployer = (await ethers.getSigners())[0];
+  const owner = (await ethers.getSigners())[0];
+  const deployer = (await ethers.getSigners())[1];
   const ownerAddress = addrRecord["Owner"];
 
   // Set contract instance
@@ -37,6 +38,7 @@ async function main() {
     ).maxPriorityFeePerGas!,
   };
 
+  const dotDomain = "0x" + "00".repeat(32);
   const ethDomain = "eth";
   const mainDomain = "token";
   const fullDomain = `${mainDomain}.${ethDomain}`;
@@ -44,8 +46,20 @@ async function main() {
   let tx: providers.TransactionResponse;
   let txReceipt: providers.TransactionReceipt;
 
-  // Set maindomain owner
+  // Set ethdomain manager to Owner by Deployer
   tx = await ensRegiContract.connect(deployer).setSubnodeOwner(
+    dotDomain,
+    ethers.utils.id(ethDomain), // Compute the keccak256 cryptographic hash
+    ownerAddress,
+    overrides
+  );
+  txReceipt = await tx.wait(); // Wait for transaction to confirm that block has been mined
+  console.log(
+    `Set ethdomain \"${ethDomain}\" owner, TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
+  );
+
+  // Set maindomain manager to Owner by above setting Owner
+  tx = await ensRegiContract.connect(owner).setSubnodeOwner(
     ethers.utils.namehash(ethDomain), // Compute the namehash of ensName
     ethers.utils.id(mainDomain), // Compute the keccak256 cryptographic hash
     ownerAddress,
@@ -53,18 +67,18 @@ async function main() {
   );
   txReceipt = await tx.wait(); // Wait for transaction to confirm that block has been mined
   console.log(
-    `Set maindomain \"${mainDomain}\" owner TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
+    `Set maindomain \"${mainDomain}\" owner, TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
   );
 
-  // Set fulldomain resolver
-  tx = await ensRegiContract.connect(deployer).setResolver(
+  // Set fulldomain resolver contract to OffchainResolver by Owner
+  tx = await ensRegiContract.connect(owner).setResolver(
     ethers.utils.namehash(fullDomain), // Compute the namehash of ensName
     offResvContract.address,
     overrides
   );
   txReceipt = await tx.wait(); // Wait for transaction to confirm that block has been mined
   console.log(
-    `Set fulldomain \"${fullDomain}\" resolver TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
+    `Set fulldomain \"${fullDomain}\" resolver contract, TX: ${etherscanURL}/tx/${txReceipt.transactionHash}`
   );
 }
 
