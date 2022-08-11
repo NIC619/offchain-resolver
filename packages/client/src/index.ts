@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import ethers from 'ethers';
+import { formatsByName } from '@ensdomains/address-encoder';
 
 const program = new Command();
 program
@@ -23,14 +24,31 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
   const name = program.args[0];
   let resolver = await provider.getResolver(name);
   if (resolver) {
-    let ethAddress = await resolver.getAddress();
-    let btcAddress = await resolver.getAddress(0);
-    let content = await resolver.getContentHash();
-    console.log(`resolver address ${resolver.address}`);
-    console.log(`eth address ${ethAddress}`);
-    console.log(`btc address ${btcAddress}`);
-    console.log(`content ${content}`);
+    const ethAddress = await resolver.getAddress();
+    const btcAddress = await resolver.getAddress(0);
+    const ltcAddress = await resolver.getAddress(2);
+    const email = await resolver.getText('email');
+    const content = await resolver.getContentHash();
+
+    console.log(`Resolver contract address: ${resolver.address}`);
+    console.log(`ETH address: ${ethAddress}`);
+    console.log(`LTC address: ${ltcAddress}`);
+    console.log(
+      `\t└─ decode to onchain hex: ${addressToOnchainHex(ltcAddress, 'LTC')}`
+    );
+    console.log(`BTC address; ${btcAddress}`);
+    console.log(
+      `\t└─ decode to onchain hex: ${addressToOnchainHex(btcAddress, 'BTC')}`
+    );
+    console.log(`Email: ${email}`);
+    console.log(`Content: ${content}`);
   } else {
     console.log('no resolver found');
   }
 })();
+
+function addressToOnchainHex(address: string, coinType: string): string {
+  // Decode to EIP-2304 onchain hex string
+  const onchain = formatsByName[coinType].decoder(address);
+  return `0x${onchain.toString('hex')}`;
+}
