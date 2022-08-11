@@ -39,19 +39,19 @@ npx hardhat run ./scripts/deploy/ENSRegistry.ts --network goerli
 
 ```
 Deploying ENSRegistry contract...
-✔ Expected new contract address : 0xCAff8bDd1a730359C63Db8240e63184504C60B24, is this correct? … yes
-ENSRegistry contract address: 0xCAff8bDd1a730359C63Db8240e63184504C60B24
+✔ Expected new contract address : 0x12315f08329E9727292b055e91A5b4878E264afF, is this correct? … yes
+ENSRegistry contract address: 0x12315f08329E9727292b055e91A5b4878E264afF
 
 ✔ Verify contract on etherscan
-cmd : npx hardhat verify --network goerli --contract contracts/ENSRegistry.sol:ENSRegistry 0xCAff8bDd1a730359C63Db8240e63184504C60B24 ? … yes
+cmd : npx hardhat verify --network goerli --contract contracts/ENSRegistry.sol:ENSRegistry 0x12315f08329E9727292b055e91A5b4878E264afF ? … yes
 Nothing to compile
 
 Successfully submitted source code for contract
-contracts/ENSRegistry.sol:ENSRegistry at 0xCAff8bDd1a730359C63Db8240e63184504C60B24
+contracts/ENSRegistry.sol:ENSRegistry at 0x12315f08329E9727292b055e91A5b4878E264afF
 for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract ENSRegistry on Etherscan.
-https://goerli.etherscan.io/address/0xCAff8bDd1a730359C63Db8240e63184504C60B24#code
+https://goerli.etherscan.io/address/0x12315f08329E9727292b055e91A5b4878E264afF#code
 ```
 
 #### Deploy OffchainResolver contract to Goerli Testnet
@@ -64,19 +64,19 @@ npx hardhat run ./scripts/deploy/OffchainResolver.ts --network goerli
 
 ```
 Deploying OffchainResolver contract...
-✔ Expected new contract address : 0x76e099f303E23FD5A362563B955715aaADCf504F, is this correct? … yes
-OffchainResolver contract address: 0x76e099f303E23FD5A362563B955715aaADCf504F
+✔ Expected new contract address : 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df, is this correct? … yes
+OffchainResolver contract address: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
 
 ✔ Verify contract on etherscan
-cmd : npx hardhat verify --network goerli --contract contracts/OffchainResolver.sol:OffchainResolver 0x76e099f303E23FD5A362563B955715aaADCf504F --constructor-args ./scripts/goerli/deployments/OffchainResolverVerifyArguments.ts ? … yes
+cmd : npx hardhat verify --network goerli --contract contracts/OffchainResolver.sol:OffchainResolver 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df --constructor-args ./scripts/goerli/deployments/OffchainResolverVerifyArguments.ts ? … yes
 Nothing to compile
 
 Successfully submitted source code for contract
-contracts/OffchainResolver.sol:OffchainResolver at 0x76e099f303E23FD5A362563B955715aaADCf504F
+contracts/OffchainResolver.sol:OffchainResolver at 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
 for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract ENSRegistry on Etherscan.
-https://goerli.etherscan.io/address/0x76e099f303E23FD5A362563B955715aaADCf504F#code
+https://goerli.etherscan.io/address/0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df#code
 ```
 
 #### Set ENSRegistry contract `token.eth` maindomain, and corresponding OffchainResolver contract address
@@ -88,15 +88,15 @@ npx hardhat run ./scripts/operating/OffchainResolver/SetResolver.ts --network go
 - Example output:
 
 ```
-ENSRegistry contract on etherscan: https://goerli.etherscan.io/address/0xCAff8bDd1a730359C63Db8240e63184504C60B24
+ENSRegistry contract on etherscan: https://goerli.etherscan.io/address/0x12315f08329E9727292b055e91A5b4878E264afF
 
-OffchainResolver contract on etherscan: https://goerli.etherscan.io/address/0x76e099f303E23FD5A362563B955715aaADCf504F
+OffchainResolver contract on etherscan: https://goerli.etherscan.io/address/0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
 
-Set ethdomain "eth" owner, TX: https://goerli.etherscan.io/tx/0xd43a76115cf59dcd4f74d46c6bc8953d71d87da720625724a71140850f2af9d9
+Set ethdomain "eth" owner, TX: https://goerli.etherscan.io/tx/0x3f093c0bd1c6b616c46c72032025af64080dcd193c85e615446e84d9eacee52d
 
-Set maindomain "token" owner, TX: https://goerli.etherscan.io/tx/0x595ccaf6bd326d2b49b3ee1fc6d36506ac0d1ad8b211dc424379e7bf13b1f763
+Set maindomain "token" owner, TX: https://goerli.etherscan.io/tx/0x980097bcd976d39ea30cc928e8753d4d74a349f7db5a04c16711096f02b94e9a
 
-Set fulldomain "token.eth" resolver contract, TX: https://goerli.etherscan.io/tx/0xf55372d46eef15afc1326df8c67be7dc2be5d71ac6e0768de47ef609d6562d4a
+Set fulldomain "token.eth" resolver contract, TX: https://goerli.etherscan.io/tx/0xc112ad0ed9497c8f6ee1cf7c966534f16e717d351285cce218f624b97fc5d352
 ```
 
 #### Get ENSRegistry contract `token.eth` maindomain, and corresponding OffchainResolver contract address
@@ -108,11 +108,11 @@ Set fulldomain "token.eth" resolver contract, TX: https://goerli.etherscan.io/tx
 - Example output:
 
 ```
-ENSRegistry contract on etherscan: https://goerli.etherscan.io/address/0xCAff8bDd1a730359C63Db8240e63184504C60B24
+ENSRegistry contract on etherscan: https://goerli.etherscan.io/address/0x12315f08329E9727292b055e91A5b4878E264afF
 
 Get ethdomain "eth" owner: 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
 
 Get maindomain "token" owner: 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
 
-Get fulldomain "token.eth" resolver contract: 0x76e099f303E23FD5A362563B955715aaADCf504F
+Get fulldomain "token.eth" resolver contract: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
 ```
