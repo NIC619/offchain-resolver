@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "node dist/index.js",
+    "start-goerli": "eval $(grep '^PRIVATE_KEY' .env) && node dist/index.js --private-key ${PRIVATE_KEY}",
     "build": "tsdx build",
     "test": "tsdx test",
     "lint": "tsdx lint",
