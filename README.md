@@ -1,6 +1,6 @@
 # ENS Offchain Resolver
-![CI](https://github.com/ensdomains/offchain-resolver/actions/workflows/main.yml/badge.svg)
 
+![CI](https://github.com/ensdomains/offchain-resolver/actions/workflows/main.yml/badge.svg)
 
 This repository contains smart contracts and a node.js gateway server that together allow hosting ENS names offchain using [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) and [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution).
 
@@ -26,89 +26,128 @@ Start by generating an Ethereum private key; this will be used as a signing key 
 python3 -c "import os; import binascii; print('0x%s' % binascii.hexlify(os.urandom(32)).decode('utf-8'))"
 ```
 
-For the rest of this demo we will be using the standard test private key `0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80`.
+Please set the private key to gateway .env file under `packages/gateway/`:
+
+```bash
+cp ./packages/gateway/.env.example ./packages/gateway/.env
+code ./packages/gateway/.env
+```
 
 First, install dependencies and build all packages:
 
 ```bash
-yarn && yarn build
+yarn clean && yarn install && yarn build
 ```
 
-Next, run the gateway:
+Next, run the gateway with the private key on the `Goerli` testnet:
 
 ```bash
-yarn start:gateway --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --data test.eth.json
+yarn start-goerli:gateway --data token.eth.json
 ```
 
-The value for the `--private-key` flag should be the key you generated earlier.
-
-You will see output similar to the following:
-```
-Serving on port 8000 with signing address 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-```
-
-Take a look at the data in `test.eth.json` under `packages/gateway/`; it specifies addresses for the name `test.eth` and the wildcard `*.test.eth`.
-
-Next, edit `packages/contracts/hardhat.config.js`; replacing the address on line 59 with the one output when you ran the command above. Then, in a new terminal, build and run a test node with an ENS registry and the offchain resolver deployed:
-
-```
-cd packages/contracts
-npx hardhat node
-```
+The value for the private key should be the key you set earlier in the .env file.
 
 You will see output similar to the following:
 
 ```
-Compilation finished successfully
-deploying "ENSRegistry" (tx: 0x8b353610592763c0abd8b06305e9e82c1b14afeecac99b1ce1ee54f5271baa2c)...: deployed at 0x5FbDB2315678afecb367f032d93F642f64180aa3 with 1084532 gas
-deploying "OffchainResolver" (tx: 0xdb3142c2c4d214b58378a5261859a7f104908a38b4b9911bb75f8f21aa28e896)...: deployed at 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512 with 1533637 gas
-Started HTTP and WebSocket JSON-RPC server at http://127.0.0.1:9545/
-
-Accounts
-========
-
-WARNING: These accounts, and their private keys, are publicly known.
-Any funds sent to them on Mainnet or any other live network WILL BE LOST.
-
-Account #0: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266 (10000 ETH)
-Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-
-(truncated for brevity)
+Serving on port 8000 with signing address 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
 ```
 
-Take note of the address to which the ENSRegistry was deployed (0x5FbDB...).
+Take a look at the data in `token.eth.json` under `packages/gateway/`; it specifies addresses for the name `token.eth` and the wildcard `*.token.eth`.
 
-Finally, in a third terminal, run the example client to demonstrate resolving a name:
+Next, edit `packages/contracts/scripts/goerli/deployments/AddressRecord.json`; replacing the address of `Signer` and `Owner` with the one output when you ran the command above.
+
+And, edit contracts .env file under `packages/contracts/`:
+
+```bash
+cp ./packages/contracts/.env.example ./packages/contracts/.env
+code ./packages/contracts/.env
+```
+
+Then, in a new terminal, connect to `Goerli` testnet with an ENS registry and the offchain resolver deployed:
+
+```bash
+cd ./packages/contracts
+npx hardhat run ./scripts/deploy/ENSRegistry.ts --network goerli
+npx hardhat run ./scripts/deploy/OffchainResolver.ts --network goerli
+```
+
+Before setting the domain owner, move the new `ABI` files to `deployments` folder:
+
+```bash
+mkdir -p ./deployments/goerli
+mv -f ./scripts/goerli/deployments/ENSRegistry.json ./deployments/goerli/ENSRegistry.json
+mv -f ./scripts/goerli/deployments/OffchainResolver.json ./deployments/goerli/OffchainResolver.json
+```
+
+Set the domain owner and resolver address:
+
+```bash
+npx hardhat run ./scripts/operating/OffchainResolver/SetResolver.ts --network goerli
+```
+
+You will see output similar to the following:
 
 ```
-yarn start:client --registry 0x5FbDB2315678afecb367f032d93F642f64180aa3 test.eth
-yarn start:client --registry 0x5FbDB2315678afecb367f032d93F642f64180aa3 foo.test.eth
+ENSRegistry contract on etherscan: https://goerli.etherscan.io/address/0x12315f08329E9727292b055e91A5b4878E264afF
+OffchainResolver contract on etherscan: https://goerli.etherscan.io/address/0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
+Set ethdomain "eth" owner, TX: https://goerli.etherscan.io/tx/0x3f093c0bd1c6b616c46c72032025af64080dcd193c85e615446e84d9eacee52d
+Set maindomain "token" owner, TX: https://goerli.etherscan.io/tx/0x980097bcd976d39ea30cc928e8753d4d74a349f7db5a04c16711096f02b94e9a
+Set fulldomain "token.eth" resolver contract, TX: https://goerli.etherscan.io/tx/0xc112ad0ed9497c8f6ee1cf7c966534f16e717d351285cce218f624b97fc5d352
+```
+
+Take note of the address to which the ENSRegistry was deployed (0x12315f...).
+
+Finally, in the same terminal, run the example client to demonstrate resolving a name:
+
+```bash
+cd ../../
+yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF token.eth
+yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
 ```
 
 You should see output similar to the following:
 
 ```
-$ yarn start:client --registry 0x5FbDB2315678afecb367f032d93F642f64180aa3 test.eth
-yarn run v1.22.17
-$ node packages/client/dist/index.js --registry 0x5FbDB2315678afecb367f032d93F642f64180aa3 test.eth
-test.eth: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
-Done in 0.28s.
+% yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF token.eth
 
-$ yarn start:client --registry 0x5FbDB2315678afecb367f032d93F642f64180aa3 foo.test.eth
-yarn run v1.22.17
-$ node packages/client/dist/index.js --registry 0x5FbDB2315678afecb367f032d93F642f64180aa3 foo.test.eth
-foo.test.eth: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-Done in 0.23s.
+yarn run v1.22.19
+$ yarn workspace @ensdomains/offchain-resolver-client start-goerli --registry 0x12315f08329E9727292b055e91A5b4878E264afF token.eth
+$ eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN} --registry 0x12315f08329E9727292b055e91A5b4878E264afF token.eth
+Resolver contract address: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
+ETH address: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+LTC address: Ld797g7vcD34F4m3pCR5fb1Z98yEswMLGX
+        └─ decode to onchain hex: 0x76a914c428696e02ed7f5b41a9f180367bebb2b408422088ac
+BTC address; 1Ei9UmLQv4o4UJTy5r5mnGFeC9auM3W5P1
+        └─ decode to onchain hex: 0x76a9149661c46c94700b2cc891109fffc3a49b26d1f78e88ac
+Email: test@token.im
+Content: ipfs://QmTeW79w7QQ6Npa3b1d5tANreCDxF2iDaAPsDvW6KtLmfB
+✨  Done in 18.76s.
+
+% yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
+
+yarn run v1.22.19
+$ yarn workspace @ensdomains/offchain-resolver-client start-goerli --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
+$ eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN} --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
+Resolver contract address: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
+ETH address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+LTC address: LVsLJBXMpKXF3SPkpRPJZv44XVaiyW1561
+        └─ decode to onchain hex: 0x76a91474c30a9be43d3759144d1f9a8453fd8ba50480a188ac
+BTC address; 14RBPsg6mBkLSJokkzeuoCkTtoeD3nK2Kz
+        └─ decode to onchain hex: 0x76a914257b09874c32b4385fc93495eeeb63e64b5f81a588ac
+Email: wildcard@token.im
+Content: ipfs://QmTeW79w7QQ6Npa3b1d5tANreCDxF2iDaAPsDvW6KtLmfB
+✨  Done in 22.56s.
 ```
 
-Check these addresses against the gateway's `test.eth.json` and you will see that they match.
+Check these addresses against the gateway's `token.eth.json` and you will see that they match.
 
 ## Real-world usage
 
 There are 5 main steps to using this in production:
 
- 1. Optionally, write a new backend for the gateway that queries your own data store. Or, use the JSON one and write your records to a JSON file in the format described in the gateway repository.
- 2. Generate one or more signing keys. Secure these appropriately; posession of the signing keys makes it possible to forge name resolution responses!
- 3. Start up a gateway server using your name database and a signing key. Publish it on a publicly-accessible URL.
- 4. Deploy `OffchainResolver` to Ethereum, providing it with the gateway URL and list of signing key addresses.
- 5. Set the newly deployed resolver as the resolver for one or more ENS names.
+1.  Optionally, write a new backend for the gateway that queries your own data store. Or, use the JSON one and write your records to a JSON file in the format described in the gateway repository.
+2.  Generate one or more signing keys. Secure these appropriately; posession of the signing keys makes it possible to forge name resolution responses!
+3.  Start up a gateway server using your name database and a signing key. Publish it on a publicly-accessible URL.
+4.  Deploy `OffchainResolver` to Ethereum, providing it with the gateway URL and list of signing key addresses.
+5.  Set the newly deployed resolver as the resolver for one or more ENS names.
