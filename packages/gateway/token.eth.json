@@ -1,0 +1,20 @@
+{
+  "token.eth": {
+    "addresses": {
+      "60": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "2": "0x76a914c428696e02ed7f5b41a9f180367bebb2b408422088ac",
+      "0": "0x76a9149661c46c94700b2cc891109fffc3a49b26d1f78e88ac"
+    },
+    "text": { "email": "test@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "*.token.eth": {
+    "addresses": {
+      "60": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "2": "0x76a91474c30a9be43d3759144d1f9a8453fd8ba50480a188ac",
+      "0": "0x76a914257b09874c32b4385fc93495eeeb63e64b5f81a588ac"
+    },
+    "text": { "email": "wildcard@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  }
+}
