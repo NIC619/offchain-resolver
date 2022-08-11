@@ -58,7 +58,7 @@ module.exports = {
       tags: ["test", "demo"],
       chainId: 5,
       accounts: real_accounts,
-      gatewayurl,
+      gatewayurl: "http://localhost:8080/{sender}/{data}.json",
     },
     mainnet: {
       url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
