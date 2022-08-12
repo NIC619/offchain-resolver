@@ -36,7 +36,7 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
     console.log(
       `\t└─ decode to onchain hex: ${addressToOnchainHex(ltcAddress, 'LTC')}`
     );
-    console.log(`BTC address; ${btcAddress}`);
+    console.log(`BTC address: ${btcAddress}`);
     console.log(
       `\t└─ decode to onchain hex: ${addressToOnchainHex(btcAddress, 'BTC')}`
     );

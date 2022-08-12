@@ -50,7 +50,7 @@ The value for the private key should be the key you set earlier in the .env file
 You will see output similar to the following:
 
 ```
-Serving on port 8000 with signing address 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
+Serving on port 8080 with signing address 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
 ```
 
 Take a look at the data in `token.eth.json` under `packages/gateway/`; it specifies addresses for the name `token.eth` and the wildcard `*.token.eth`.
@@ -118,7 +118,7 @@ Resolver contract address: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
 ETH address: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
 LTC address: Ld797g7vcD34F4m3pCR5fb1Z98yEswMLGX
         └─ decode to onchain hex: 0x76a914c428696e02ed7f5b41a9f180367bebb2b408422088ac
-BTC address; 1Ei9UmLQv4o4UJTy5r5mnGFeC9auM3W5P1
+BTC address: 1Ei9UmLQv4o4UJTy5r5mnGFeC9auM3W5P1
         └─ decode to onchain hex: 0x76a9149661c46c94700b2cc891109fffc3a49b26d1f78e88ac
 Email: test@token.im
 Content: ipfs://QmTeW79w7QQ6Npa3b1d5tANreCDxF2iDaAPsDvW6KtLmfB
@@ -133,7 +133,7 @@ Resolver contract address: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
 ETH address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
 LTC address: LVsLJBXMpKXF3SPkpRPJZv44XVaiyW1561
         └─ decode to onchain hex: 0x76a91474c30a9be43d3759144d1f9a8453fd8ba50480a188ac
-BTC address; 14RBPsg6mBkLSJokkzeuoCkTtoeD3nK2Kz
+BTC address: 14RBPsg6mBkLSJokkzeuoCkTtoeD3nK2Kz
         └─ decode to onchain hex: 0x76a914257b09874c32b4385fc93495eeeb63e64b5f81a588ac
 Email: wildcard@token.im
 Content: ipfs://QmTeW79w7QQ6Npa3b1d5tANreCDxF2iDaAPsDvW6KtLmfB
