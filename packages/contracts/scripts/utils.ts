@@ -21,6 +21,15 @@ export async function getLatestGitHash(): Promise<String> {
   return latest ? latest.hash : "";
 }
 
+function getAddrRecordPath() {
+  return path.join(
+    config.paths["root"],
+    "deployments",
+    networkName,
+    "AddressRecord.json"
+  );
+}
+
 export function getENSRegiJson() {
   const ensRegiJSON = require(path.join(
     config.paths["root"],
@@ -88,16 +97,6 @@ export async function verifyContract(cmd: string) {
 /*********************************
  *     Same as private repo      *
  *********************************/
-
-function getAddrRecordPath() {
-  return path.join(
-    config.paths["root"],
-    "scripts",
-    networkName,
-    "deployments",
-    "AddressRecord.json"
-  );
-}
 
 export async function updateAddrRecord(addrRecord) {
   // Expect file exists already
