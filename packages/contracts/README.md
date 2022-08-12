@@ -68,7 +68,7 @@ Deploying OffchainResolver contract...
 OffchainResolver contract address: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
 
 ✔ Verify contract on etherscan
-cmd : npx hardhat verify --network goerli --contract contracts/OffchainResolver.sol:OffchainResolver 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df --constructor-args ./scripts/goerli/deployments/OffchainResolverVerifyArguments.ts ? … yes
+cmd : npx hardhat verify --network goerli --contract contracts/OffchainResolver.sol:OffchainResolver 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df --constructor-args ./scripts/deploy/OffchainResolverVerifyArguments.ts ? … yes
 Nothing to compile
 
 Successfully submitted source code for contract
