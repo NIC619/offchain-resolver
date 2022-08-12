@@ -53,17 +53,15 @@ export function getOffResvJson() {
 export function writeContractJson(contractName: string, content) {
   const jsonPath = path.join(
     config.paths["root"],
-    "scripts",
-    networkName,
     "deployments",
+    networkName,
     `${contractName}.json`
   );
   // The folder where Json is located
   const folderPath = path.join(
     config.paths["root"],
-    "scripts",
-    networkName,
-    "deployments"
+    "deployments",
+    networkName
   );
   if (fs.existsSync(jsonPath)) {
     fs.writeFileSync(jsonPath, JSON.stringify(content, null, 2));

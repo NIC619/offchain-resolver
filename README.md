@@ -72,14 +72,6 @@ npx hardhat run ./scripts/deploy/ENSRegistry.ts --network goerli
 npx hardhat run ./scripts/deploy/OffchainResolver.ts --network goerli
 ```
 
-Before setting the domain owner, move the new `ABI` files to `deployments` folder:
-
-```bash
-mkdir -p ./deployments/goerli
-mv -f ./scripts/goerli/deployments/ENSRegistry.json ./deployments/goerli/ENSRegistry.json
-mv -f ./scripts/goerli/deployments/OffchainResolver.json ./deployments/goerli/OffchainResolver.json
-```
-
 Set the domain owner and resolver address:
 
 ```bash
