@@ -50,21 +50,25 @@ The value for the private key should be the key you set earlier in the .env file
 You will see output similar to the following:
 
 ```
+yarn run v1.22.19
+$ yarn workspace @ensdomains/offchain-resolver-gateway start-goerli --data token.eth.json
+$ eval $(grep '^PRIVATE_KEY' .env) && node dist/index.js --private-key ${PRIVATE_KEY} --data token.eth.json
+
 Serving on port 8080 with signing address 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
 ```
 
 Take a look at the data in `token.eth.json` under `packages/gateway/`; it specifies addresses for the name `token.eth` and the wildcard `*.token.eth`.
 
-Next, edit `packages/contracts/scripts/goerli/deployments/AddressRecord.json`; replacing the address of `Signer` and `Owner` with the one output when you ran the command above.
+Next, edit `packages/contracts/deployments/goerli/AddressRecord.json`; replacing the address of `Signer` and `Owner` with the one output when you ran the command above.
 
-And, edit contracts .env file under `packages/contracts/`:
+And, `in a new terminal`, edit contracts .env file under `packages/contracts/`:
 
 ```bash
 cp ./packages/contracts/.env.example ./packages/contracts/.env
 code ./packages/contracts/.env
 ```
 
-Then, in a new terminal, connect to `Goerli` testnet with an ENS registry and the offchain resolver deployed:
+Then, connect to `Goerli` testnet with an ENS registry and the offchain resolver deployed:
 
 ```bash
 cd ./packages/contracts
