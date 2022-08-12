@@ -59,16 +59,16 @@ Serving on port 8080 with signing address 0x3B7D34d0E7e807A9D7aD74F094C5379aca61
 
 Take a look at the data in `token.eth.json` under `packages/gateway/`; it specifies addresses for the name `token.eth` and the wildcard `*.token.eth`.
 
-Next, edit `packages/contracts/deployments/goerli/AddressRecord.json`; replacing the address of `Signer` and `Owner` with the one output when you ran the command above.
+Next, edit `packages/contracts/deployments/goerli/AddressRecord.json`; replacing the address of `Signer` and `Owner` with the one output when you ran the command above (0x3B7D34...).
 
-And, `in a new terminal`, edit contracts .env file under `packages/contracts/`:
+And, in a new terminal, edit contracts .env file under `packages/contracts/`:
 
 ```bash
 cp ./packages/contracts/.env.example ./packages/contracts/.env
 code ./packages/contracts/.env
 ```
 
-Then, connect to `Goerli` testnet with an ENS registry and the offchain resolver deployed:
+Then, connect to `Goerli` testnet and deploy ENS registry and the offchain resolver:
 
 ```bash
 cd ./packages/contracts
