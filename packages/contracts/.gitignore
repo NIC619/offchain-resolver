@@ -1,4 +1,4 @@
 artifacts
 
 playground
-scripts/hardhat
+deployments/hardhat

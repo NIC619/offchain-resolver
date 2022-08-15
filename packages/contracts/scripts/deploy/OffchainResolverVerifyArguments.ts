@@ -6,9 +6,8 @@ const networkName = network.name;
 // Get Signer address from AddressRecord.json
 const addrRecordPath = require(path.join(
   config.paths["root"],
-  "scripts",
-  networkName,
   "deployments",
+  networkName,
   "AddressRecord.json"
 ));
 const signerAddress = addrRecordPath["Signer"];

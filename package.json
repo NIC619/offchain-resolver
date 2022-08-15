@@ -7,13 +7,20 @@
   "author": "Nick Johnson <arachnid@notdot.net>",
   "license": "MIT",
   "workspaces": {
-    "packages": ["packages/*"],
-    "nohoist": ["**/hardhat*", "**/hardhat*/**"]
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/hardhat*",
+      "**/hardhat*/**"
+    ]
   },
   "private": true,
   "scripts": {
     "start:gateway": "yarn workspace @ensdomains/offchain-resolver-gateway start",
+    "start-goerli:gateway": "yarn workspace @ensdomains/offchain-resolver-gateway start-goerli",
     "start:client": "yarn workspace @ensdomains/offchain-resolver-client start",
+    "start-goerli:client": "yarn workspace @ensdomains/offchain-resolver-client start-goerli",
     "test": "yarn workspaces run test",
     "lint": "yarn workspaces run lint",
     "build": "yarn workspaces run build",

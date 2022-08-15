@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "node dist/index.js",
+    "start-goerli": "eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN}",
     "build": "tsdx build",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
@@ -46,6 +47,7 @@
     }
   ],
   "devDependencies": {
+    "@ensdomains/address-encoder": "^0.2.18",
     "@size-limit/preset-small-lib": "^7.0.5",
     "husky": "^7.0.4",
     "size-limit": "^7.0.5",

@@ -21,6 +21,15 @@ export async function getLatestGitHash(): Promise<String> {
   return latest ? latest.hash : "";
 }
 
+function getAddrRecordPath() {
+  return path.join(
+    config.paths["root"],
+    "deployments",
+    networkName,
+    "AddressRecord.json"
+  );
+}
+
 export function getENSRegiJson() {
   const ensRegiJSON = require(path.join(
     config.paths["root"],
@@ -44,17 +53,15 @@ export function getOffResvJson() {
 export function writeContractJson(contractName: string, content) {
   const jsonPath = path.join(
     config.paths["root"],
-    "scripts",
-    networkName,
     "deployments",
+    networkName,
     `${contractName}.json`
   );
   // The folder where Json is located
   const folderPath = path.join(
     config.paths["root"],
-    "scripts",
-    networkName,
-    "deployments"
+    "deployments",
+    networkName
   );
   if (fs.existsSync(jsonPath)) {
     fs.writeFileSync(jsonPath, JSON.stringify(content, null, 2));
@@ -88,16 +95,6 @@ export async function verifyContract(cmd: string) {
 /*********************************
  *     Same as private repo      *
  *********************************/
-
-function getAddrRecordPath() {
-  return path.join(
-    config.paths["root"],
-    "scripts",
-    networkName,
-    "deployments",
-    "AddressRecord.json"
-  );
-}
 
 export async function updateAddrRecord(addrRecord) {
   // Expect file exists already

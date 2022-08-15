@@ -15,6 +15,7 @@ const ALCHEMY_TOKEN = process.env.ALCHEMY_TOKEN || "";
 
 const gatewayurl =
   "https://offchain-resolver-example.uc.r.appspot.com/{sender}/{data}.json";
+const localGatewayURL = "http://localhost:8080/{sender}/{data}.json";
 
 module.exports = {
   solidity: "0.8.10",
@@ -37,28 +38,28 @@ module.exports = {
         url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
         blockNumber: 14340000,
       },
-      gatewayurl: "http://localhost:8080/{sender}/{data}.json",
+      gatewayurl: localGatewayURL,
     },
     ropsten: {
       url: `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
       tags: ["test", "demo"],
       chainId: 3,
       accounts: real_accounts,
-      gatewayurl,
+      gatewayurl: localGatewayURL,
     },
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
       tags: ["test", "demo"],
       chainId: 4,
       accounts: real_accounts,
-      gatewayurl,
+      gatewayurl: localGatewayURL,
     },
     goerli: {
       url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
       tags: ["test", "demo"],
       chainId: 5,
       accounts: real_accounts,
-      gatewayurl,
+      gatewayurl: localGatewayURL,
     },
     mainnet: {
       url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
