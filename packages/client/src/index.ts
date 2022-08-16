@@ -21,9 +21,42 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
   ensAddress,
 });
 (async () => {
-  const name = program.args[0];
-  let resolver = await provider.getResolver(name);
-  if (resolver) {
+  let name = program.args[0];
+
+  // Try to get the coin name from first element of domain name to resolve
+  const domainArray = name.split('.');
+  const coinName = domainArray[0]; // Get first element
+  if (isCoin(coinName)) {
+    // If coin resolution is successful from first element of
+    // domain name, change name to the real domain.
+    // E.g.: btc.token.eth -> real domain = token.eth
+    // But: foo.token.eth -> real domain still = foo.token.eth
+    name = domainArray.slice(1, domainArray.length).join('.');
+  }
+
+  console.log(`Resolving ${name} domain...`);
+  const resolver = await provider.getResolver(name);
+
+  if (!resolver) {
+    console.log(`No resolver contract or gatway server found`);
+    process.exit(0);
+  }
+
+  if (isCoin(coinName)) {
+    // Only resolve the specified coin address
+    const coinType = getCoinType(coinName)!;
+    const coinNameToUpper = coinName.toUpperCase();
+    const coinAddress = await resolver.getAddress(coinType);
+    console.log(`${coinNameToUpper} address: ${coinAddress}`);
+    console.log(
+      `\t└─ decode to onchain hex: ${addressToOnchainHex(
+        coinAddress,
+        coinNameToUpper // Uppercase english required
+      )}`
+    );
+  } else {
+    // If coin resolution is fails from domain name,
+    // resolve all info
     const ethAddress = await resolver.getAddress();
     const btcAddress = await resolver.getAddress(0);
     const ltcAddress = await resolver.getAddress(2);
@@ -42,8 +75,6 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
     );
     console.log(`Email: ${email}`);
     console.log(`Content: ${content}`);
-  } else {
-    console.log('no resolver found');
   }
 })();
 
@@ -51,4 +82,29 @@ function addressToOnchainHex(address: string, coinType: string): string {
   // Decode to EIP-2304 onchain hex string
   const onchain = formatsByName[coinType].decoder(address);
   return `0x${onchain.toString('hex')}`;
+}
+
+function isCoin(name: string): boolean {
+  const coinType = getCoinType(name);
+  return coinType === null ? false : true;
+}
+
+// Coin type reference: https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
+function getCoinType(coinName: string): number | null {
+  let coinType: number | null = null;
+  switch (coinName.toUpperCase()) {
+    case 'ETH': {
+      coinType = 60;
+      break;
+    }
+    case 'BTC': {
+      coinType = 0;
+      break;
+    }
+    case 'LTC': {
+      coinType = 2;
+      break;
+    }
+  }
+  return coinType;
 }
