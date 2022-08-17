@@ -24,71 +24,40 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
   let name = program.args[0];
 
   // Try to get the coin name from first element of domain name to resolve
-  const domainArray = name.split('.');
-  const coinName = domainArray[0]; // Get first element
-  if (isCoin(coinName)) {
-    // If coin resolution is successful from first element of
-    // domain name, change name to the real domain.
-    // E.g.: btc.token.eth -> real domain = token.eth
-    // But: foo.token.eth -> real domain still = foo.token.eth
-    name = domainArray.slice(1, domainArray.length).join('.');
-  }
-
-  console.log(`Resolving ${name} domain...`);
-  const resolver = await provider.getResolver(name);
-
-  if (!resolver) {
-    console.log(`No resolver contract or gatway server found`);
-    process.exit(0);
-  }
-
-  if (isCoin(coinName)) {
-    // Only resolve the specified coin address
-    const coinType = getCoinType(coinName)!;
-    const coinNameToUpper = coinName.toUpperCase();
-    const coinAddress = await resolver.getAddress(coinType);
-    console.log(`${coinNameToUpper} address: ${coinAddress}`);
-    console.log(
-      `\t└─ decode to onchain hex: ${addressToOnchainHex(
-        coinAddress,
-        coinNameToUpper // Uppercase english required
-      )}`
-    );
+  if (isGivenCoin(name)) {
+    // Coin resolution is successful, print the specified coin address
+    resolveGivenCoin(name);
   } else {
-    // If coin resolution is fails from domain name,
-    // resolve all info
-    const ethAddress = await resolver.getAddress();
-    const btcAddress = await resolver.getAddress(0);
-    const ltcAddress = await resolver.getAddress(2);
-    const email = await resolver.getText('email');
-    const content = await resolver.getContentHash();
-
-    console.log(`Resolver contract address: ${resolver.address}`);
-    console.log(`ETH address: ${ethAddress}`);
-    console.log(`LTC address: ${ltcAddress}`);
-    console.log(
-      `\t└─ decode to onchain hex: ${addressToOnchainHex(ltcAddress, 'LTC')}`
-    );
-    console.log(`BTC address: ${btcAddress}`);
-    console.log(
-      `\t└─ decode to onchain hex: ${addressToOnchainHex(btcAddress, 'BTC')}`
-    );
-    console.log(`Email: ${email}`);
-    console.log(`Content: ${content}`);
+    // Coin resolution is fails, print the all info
+    resolveAllData(name);
   }
 })();
 
+// Decode address to EIP-2304 onchain hex string
 function addressToOnchainHex(address: string, coinType: string): string {
-  // Decode to EIP-2304 onchain hex string
   const onchain = formatsByName[coinType].decoder(address);
   return `0x${onchain.toString('hex')}`;
 }
 
+// Judge the domain contains coin name
+function isGivenCoin(domain: string): boolean {
+  // Try to get the coin name from first element of domain name to resolve
+  const domainArray = domain.split('.');
+  if (domainArray.length <= 1) {
+    console.log(`[Error] Domain must have at least one dot "."`);
+    process.exit(0);
+  }
+  const coinName = domainArray[0]; // Get first element
+  return isCoin(coinName);
+}
+
+// Judge the string is coin name
 function isCoin(name: string): boolean {
   const coinType = getCoinType(name);
   return coinType === null ? false : true;
 }
 
+// Transfer coin name to coin type number
 // Coin type reference: https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
 function getCoinType(coinName: string): number | null {
   let coinType: number | null = null;
@@ -107,4 +76,64 @@ function getCoinType(coinName: string): number | null {
     }
   }
   return coinType;
+}
+
+// Resolve the specific coin address from domain name
+async function resolveGivenCoin(domain: string) {
+  const domainArray = domain.split('.');
+  // Get first element as coin name
+  const coinName = domainArray[0];
+  const coinType = getCoinType(coinName)!;
+  const coinNameToUpper = coinName.toUpperCase();
+
+  // Change name to the real domain.
+  // E.g.: btc.token.eth -> real domain = token.eth
+  const name = domainArray.slice(1, domainArray.length).join('.');
+
+  console.log(`Resolving ${name} domain...`);
+  const resolver = await provider.getResolver(name);
+
+  if (!resolver) {
+    console.log(`[Error] No resolver contract or gateway server found`);
+    process.exit(0);
+  }
+
+  const coinAddress = await resolver.getAddress(coinType);
+  console.log(`${coinNameToUpper} address: ${coinAddress}`);
+  console.log(
+    `\t└─ decode to onchain hex: ${addressToOnchainHex(
+      coinAddress,
+      coinNameToUpper // Uppercase english required
+    )}`
+  );
+}
+
+// Resolve all info from domain name
+async function resolveAllData(domain: string) {
+  console.log(`Resolving ${domain} domain...`);
+  const resolver = await provider.getResolver(domain);
+
+  if (!resolver) {
+    console.log(`[Error] No resolver contract or gateway server found`);
+    process.exit(0);
+  }
+
+  const ethAddress = await resolver.getAddress();
+  const btcAddress = await resolver.getAddress(0);
+  const ltcAddress = await resolver.getAddress(2);
+  const email = await resolver.getText('email');
+  const content = await resolver.getContentHash();
+
+  console.log(`Resolver contract address: ${resolver.address}`);
+  console.log(`ETH address: ${ethAddress}`);
+  console.log(`LTC address: ${ltcAddress}`);
+  console.log(
+    `\t└─ decode to onchain hex: ${addressToOnchainHex(ltcAddress, 'LTC')}`
+  );
+  console.log(`BTC address: ${btcAddress}`);
+  console.log(
+    `\t└─ decode to onchain hex: ${addressToOnchainHex(btcAddress, 'BTC')}`
+  );
+  console.log(`Email: ${email}`);
+  console.log(`Content: ${content}`);
 }
