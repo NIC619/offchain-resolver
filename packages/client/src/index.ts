@@ -94,7 +94,7 @@ async function resolveGivenCoin(domain: string) {
   const resolver = await provider.getResolver(name);
 
   if (!resolver) {
-    console.log(`[Error] No resolver contract or gateway server found`);
+    console.log(`[Error] No resolver contract found`);
     process.exit(0);
   }
 
@@ -114,7 +114,7 @@ async function resolveAllData(domain: string) {
   const resolver = await provider.getResolver(domain);
 
   if (!resolver) {
-    console.log(`[Error] No resolver contract or gateway server found`);
+    console.log(`[Error] No resolver contract found`);
     process.exit(0);
   }
 
