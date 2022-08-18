@@ -136,6 +136,48 @@ Content: ipfs://QmTeW79w7QQ6Npa3b1d5tANreCDxF2iDaAPsDvW6KtLmfB
 ✨  Done in 22.56s.
 ```
 
+Postscript: If you want to specify the eth or btc address of the token.eth domain, you can use eth + dot + domain or btc + dot + domain to resolve:
+
+```bash
+yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF eth.token.eth
+yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF btc.token.eth
+yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF ltc.token.eth
+```
+
+You should see output similar to the following:
+
+```
+% yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF eth.token.eth
+
+yarn run v1.22.19
+$ yarn workspace @ensdomains/offchain-resolver-client start-goerli --registry 0x12315f08329E9727292b055e91A5b4878E264afF eth.token.eth
+$ eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN} --registry 0x12315f08329E9727292b055e91A5b4878E264afF eth.token.eth
+Resolving token.eth domain...
+ETH address: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+        └─ decode to onchain hex: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+✨  Done in 10.53s.
+
+% yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF btc.token.eth
+
+yarn run v1.22.19
+$ yarn workspace @ensdomains/offchain-resolver-client start-goerli --registry 0x12315f08329E9727292b055e91A5b4878E264afF btc.token.eth
+$ eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN} --registry 0x12315f08329E9727292b055e91A5b4878E264afF btc.token.eth
+Resolving token.eth domain...
+BTC address: 1Ei9UmLQv4o4UJTy5r5mnGFeC9auM3W5P1
+        └─ decode to onchain hex: 0x76a9149661c46c94700b2cc891109fffc3a49b26d1f78e88ac
+✨  Done in 10.27s.
+
+% yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF ltc.token.eth
+
+yarn run v1.22.19
+$ yarn workspace @ensdomains/offchain-resolver-client start-goerli --registry 0x12315f08329E9727292b055e91A5b4878E264afF ltc.token.eth
+$ eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN} --registry 0x12315f08329E9727292b055e91A5b4878E264afF ltc.token.eth
+Resolving token.eth domain...
+LTC address: Ld797g7vcD34F4m3pCR5fb1Z98yEswMLGX
+        └─ decode to onchain hex: 0x76a914c428696e02ed7f5b41a9f180367bebb2b408422088ac
+✨  Done in 9.96s.
+```
+
 Check these addresses against the gateway's `token.eth.json` and you will see that they match.
 
 ## Real-world usage
