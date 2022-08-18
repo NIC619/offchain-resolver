@@ -28,7 +28,7 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
     // Coin resolution is successful, print the specified coin address
     resolveGivenCoin(name);
   } else {
-    // Coin resolution is fails, print the all info
+    // Coin resolution fails, print all info
     resolveAllData(name);
   }
 })();
@@ -39,9 +39,9 @@ function addressToOnchainHex(address: string, coinType: string): string {
   return `0x${onchain.toString('hex')}`;
 }
 
-// Judge the domain contains coin name
+// Determine if the first name in the domain is a name of a coin
 function isGivenCoin(domain: string): boolean {
-  // Try to get the coin name from first element of domain name to resolve
+  // Try to get the first name in the domain
   const domainArray = domain.split('.');
   if (domainArray.length <= 1) {
     console.log(`[Error] Domain must have at least one dot "."`);
@@ -51,13 +51,13 @@ function isGivenCoin(domain: string): boolean {
   return isCoin(coinName);
 }
 
-// Judge the string is coin name
+// Determine if the name is name of a coin
 function isCoin(name: string): boolean {
   const coinType = getCoinType(name);
   return coinType === null ? false : true;
 }
 
-// Transfer coin name to coin type number
+// Get coin type from the name
 // Coin type reference: https://github.com/satoshilabs/slips/blob/master/slip-0044.md#registered-coin-types
 function getCoinType(coinName: string): number | null {
   let coinType: number | null = null;
@@ -86,8 +86,8 @@ async function resolveGivenCoin(domain: string) {
   const coinType = getCoinType(coinName)!;
   const coinNameToUpper = coinName.toUpperCase();
 
-  // Change name to the real domain.
-  // E.g.: btc.token.eth -> real domain = token.eth
+  // Remove coin name from domain
+  // E.g.: btc.token.eth -> token.eth
   const name = domainArray.slice(1, domainArray.length).join('.');
 
   console.log(`Resolving ${name} domain...`);
