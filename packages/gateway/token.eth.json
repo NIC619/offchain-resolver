@@ -16,5 +16,41 @@
     },
     "text": { "email": "wildcard@token.im" },
     "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "test.eth": {
+    "addresses": {
+      "60": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+      "2": "0x76a914c428696e02ed7f5b41a9f180367bebb2b408422088ac",
+      "0": "0x76a9149661c46c94700b2cc891109fffc3a49b26d1f78e88ac"
+    },
+    "text": { "email": "nic@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "*.test.eth": {
+    "addresses": {
+      "60": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+      "2": "0x76a91474c30a9be43d3759144d1f9a8453fd8ba50480a188ac",
+      "0": "0x76a914257b09874c32b4385fc93495eeeb63e64b5f81a588ac"
+    },
+    "text": { "email": "cyan@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "labs.eth": {
+    "addresses": {
+      "60": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+      "2": "0x76a914c428696e02ed7f5b41a9f180367bebb2b408422088ac",
+      "0": "0x76a9149661c46c94700b2cc891109fffc3a49b26d1f78e88ac"
+    },
+    "text": { "email": "changwu@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "*.labs.eth": {
+    "addresses": {
+      "60": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+      "2": "0x76a91474c30a9be43d3759144d1f9a8453fd8ba50480a188ac",
+      "0": "0x76a914257b09874c32b4385fc93495eeeb63e64b5f81a588ac"
+    },
+    "text": { "email": "irara@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
   }
 }
