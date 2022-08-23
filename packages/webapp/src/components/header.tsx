@@ -10,7 +10,7 @@ import {
   LinkOverlay,
 } from "@chakra-ui/react";
 
-const siteTitle = "FirstDAPP";
+const siteTitle = "ENSRegistry DAPP";
 export default function Header() {
   return (
     <Flex
@@ -27,7 +27,9 @@ export default function Header() {
         </NextLink>
       </LinkBox>
       <Spacer />
-      <Button>Button for Account </Button>
+      <form action="https://metamask.io/download/" target="_blank">
+        <input type="submit" value="MetaMask Required" />
+      </form>
     </Flex>
   );
 }

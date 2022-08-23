@@ -1,84 +1,99 @@
-// src/pages/index.tsx
-import type { NextPage } from 'next'
 import Head from 'next/head'
 import NextLink from "next/link"
-import { VStack, Heading, Box, LinkOverlay, LinkBox} from "@chakra-ui/layout"
-import { Text, Button } from '@chakra-ui/react'
-
+import type { NextPage } from 'next'
 import { useState, useEffect} from 'react'
+import { Text, Button } from '@chakra-ui/react'
+import { VStack, Heading, Box, LinkOverlay, LinkBox} from "@chakra-ui/layout"
+
 import {ethers} from "ethers"
-
-import SetOwnerResolver from "components/SetOwnerResolver"
 import ReadENS from "components/ReadENS"
-
-import Image from 'next/image'
 import OffchainResolverPic from 'images/offchainresolver.png'
 
-declare let window:any
+declare let window: any
 
 const Home: NextPage = () => {
+    // Declare stateful variables and set functions
   const [balance, setBalance] = useState<string | undefined>()
   const [currentAccount, setCurrentAccount] = useState<string | undefined>()
+  const [isDomainOwner, setIsDomainOwner]=useState<boolean>(false)
   const [chainId, setChainId] = useState<number | undefined>()
   const [chainname, setChainName] = useState<string | undefined>()
+  const [ensRegistry, setENSRegistry] = useState<string>();
 
+  const domainOwner = "0x3b7d34d0e7e807a9d7ad74f094c5379aca61460d"
+  const ensRegistryAddress = "0x12315f08329E9727292b055e91A5b4878E264afF"
+
+  // Call when currentAccount changes
   useEffect(() => {
+    // Confirm the address obtained from MetaMask
     if(!currentAccount || !ethers.utils.isAddress(currentAccount)) return
-    //client side code
+    // Client side code
     if(!window.ethereum) return
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    provider.getBalance(currentAccount).then((result)=>{
-      setBalance(ethers.utils.formatEther(result))
-    })
-    provider.getNetwork().then((result)=>{
-      setChainId(result.chainId)
-      setChainName(result.name)
-    })
 
-  },[currentAccount])
+    // To get provider from MetaMask with ensAddress,
+    // Get the chainHex from MetaMask first 
+    window.ethereum.request({ method: "eth_chainId" })
+      .then((chainHex: string)=>{
+        // ChainId hex string to number
+        const chainIdNum = parseInt(chainHex, 16);
+        // Get network name from chainID number
+        const chainName = getNetworkName(chainHex);
+        if (chainName == null) {
+          return;
+        }
+        // Get provider from MetaMask with ensAddress
+        const providerWithENS = new ethers.providers.Web3Provider(window.ethereum, {
+          chainId: chainIdNum,
+          name: chainName,
+          ensAddress: ensRegistryAddress,
+        });
+        // Sync accounts[0] balance
+        providerWithENS.getBalance(currentAccount).then((result)=>{
+          setBalance(ethers.utils.formatEther(result))
+        });
+        // Sync network info 
+        providerWithENS.getNetwork().then((result)=>{
+          setChainId(result.chainId)
+          setChainName(result.name)
+          setENSRegistry(result.ensAddress!)
+        });
+      })
+  },[currentAccount]) // Set useEffect func call condition (when currentAccount changes)
 
+  // Connect MetaMask network when button clicked
   const onClickConnect = () => {
-    //client side code
     if(!window.ethereum) {
       console.log("please install MetaMask")
       return
     }
-    /*
-    //change from window.ethereum.enable() which is deprecated
-    //see docs: https://docs.metamask.io/guide/ethereum-provider.html#legacy-methods
-    window.ethereum.request({ method: 'eth_requestAccounts' })
-    .then((accounts:any)=>{
-      if(accounts.length>0) setCurrentAccount(accounts[0])
-    })
-    .catch('error',console.error)
-    */
-
-    //we can do it using ethers.js
+    // Get provider from MetaMask
     const provider = new ethers.providers.Web3Provider(window.ethereum)
-
     // MetaMask requires requesting permission to connect users accounts
     provider.send("eth_requestAccounts", [])
     .then((accounts)=>{
-      if(accounts.length>0) setCurrentAccount(accounts[0])
+      if(accounts.length>0) {
+        setCurrentAccount(accounts[0])
+        setIsDomainOwner(domainOwner === accounts[0]) // currentAccount isn't ready yet
+      }
     })
-    .catch((e)=>console.log(e))
+    .catch((e)=>console.log("[Error]", e.toString()))
   }
 
+  // Disconnect MetaMask network when button clicked again
   const onClickDisconnect = () => {
     console.log("onClickDisConnect")
     setBalance(undefined)
     setCurrentAccount(undefined)
   }
 
-  const isDomainOwner = currentAccount ==="0x3b7d34d0e7e807a9d7ad74f094c5379aca61460d"
-
+  // Render the Index page
   return (
     <>
       <Head>
-        <title>My DAPP</title>
+        <title>ENS DAPP</title>
       </Head>
 
-      <Heading as="h3"  my={4}>Explore Web3</Heading>          
+      <Heading as="h3" my={4}>Explore ENSRegistry Web3.0</Heading>          
       <VStack>
       <Box w='100%' my={4}>
         {currentAccount  
@@ -90,39 +105,29 @@ const Home: NextPage = () => {
               </Button>
         }
         </Box>
+
         {currentAccount  
-          ?<Box  mb={0} p={4} w='100%' borderWidth="1px" borderRadius="lg">
-          <Heading my={4}  fontSize='xl'>Account info</Heading>
-          <Text color={isDomainOwner ? "black" : "red"}>Account address: {currentAccount} {isDomainOwner
-              ? "(*.token.eth owner)"
-              : "(NOT *.token.eth owner)"}</Text>
-          <Text>ETH Balance of current account: {balance}</Text>
-          <Text>Chain ID: {chainId}</Text>
-          <Text>Chain Name: ChainId {chainname}</Text>
+          ?<Box mb={0} p={4} w='100%' borderWidth="1px" borderRadius="lg">
+          <Heading my={4}  fontSize='xl'>Network Information</Heading>
+          <Text>Chain ID: {chainId} ({chainname})</Text>
+          <Text>ENSRegistry Address: {ensRegistry}</Text>
         </Box>
         :<></>
         }
 
-        <Box  mb={0} p={4} w='100%' borderWidth="1px" borderRadius="lg">
-          <Heading my={4}  fontSize='xl'>Set Main Domain Owner</Heading>
-          <SetOwnerResolver 
-            currentAccount={currentAccount}
-          />
-        </Box>
-
-        <Box  mb={0} p={4} w='100%' borderWidth="1px" borderRadius="lg">
+        <Box mb={0} p={4} w='100%' borderWidth="1px" borderRadius="lg">
           <Heading my={4}  fontSize='xl'>Resolve Domain Name</Heading>
           <ReadENS 
             currentAccount={currentAccount}
           />
         </Box>
 
-        <Box  mb={0} p={4} w='100%' borderWidth="1px" borderRadius="lg">
-          <Heading my={4} fontSize='xl'>Offchain-Resolver Flow</Heading>
-          <Image src={OffchainResolverPic} alt="Offchain-Resolver flow" />
+        <Box>
+          <Heading>Offchain-Resolver Flow</Heading>
+          <img src={OffchainResolverPic.src} />
         </Box>
 
-        <LinkBox  my={4} p={4} w='100%' borderWidth="1px" borderRadius="lg">
+        <LinkBox my={4} p={4} w='100%' borderWidth="1px" borderRadius="lg">
           <NextLink href="https://github.com/NIC619/offchain-resolver" passHref>
           <LinkOverlay>
             <Heading my={4} fontSize='xl'>offchain-resolver repo with link</Heading>
@@ -130,9 +135,39 @@ const Home: NextPage = () => {
           </LinkOverlay>
           </NextLink>
         </LinkBox>
+
       </VStack>
     </>
   )
 }
 
+// Export Home
 export default Home
+
+
+function getNetworkName(chainId: string): string | null {
+  let cchainName: string | null = null;
+  switch (parseInt(chainId, 16)) {
+    case 1: {
+      cchainName = "mainnet";
+      break;
+    }
+    case 3: {
+      cchainName = "ropsten";
+      break;
+    }
+    case 4: {
+      cchainName = "rinkeby";
+      break;
+    }
+    case 5: {
+      cchainName = "goerli";
+      break;
+    }
+    case 42: {
+      cchainName = "kovan";
+      break;
+    }
+  }
+  return cchainName;
+}

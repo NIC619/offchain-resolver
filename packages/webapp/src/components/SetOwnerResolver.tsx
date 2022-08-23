@@ -14,13 +14,8 @@ interface Props {
 
 declare let window: any;
 
-export default function SetOwnerResolverA(props: Props) {
+export default function SetOwnerResolver(props: Props) {
   const currentAccount = props.currentAccount;
-  // List of ENSRegistry contracts available for POC:
-  // 0x1e6604e9a729a4ba80b1ba5a2ee7c92d3ea0d6da
-  // 0xff7298017d6b17aa85b1468ab0e950aa43c473ae
-  // 0x2b86681c6518ae64bf9d4e382a32d673fdc71609
-  // 0x12315f08329e9727292b055e91a5b4878e264aff
   const [ensRegistry, setENSRegistry] = useState<string>(
     "0x12315f08329E9727292b055e91A5b4878E264afF"
   );

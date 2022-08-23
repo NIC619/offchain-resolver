@@ -11,18 +11,19 @@ interface Props {
 declare let window: any;
 
 export default function ReadENS(props: Props) {
+  // Get Metamask account from index page props
   const currentAccount = props.currentAccount;
+  // Declare stateful variables and set functions
   const [ensRegistry, setENSRegistry] = useState<string>(
     "0x12315f08329E9727292b055e91A5b4878E264afF"
   );
   const [offchainResolver, setOffchainResolver] = useState<string>("");
   const [gatewayURL, setGatewayURL] = useState<string>("");
   const [domainName, setDomainName] = useState<string>("token.eth");
-  const [resolvedAddress, setResolvedAddress] = useState<string>("");
+  const [resolvedData, setResolvedData] = useState<string | null>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [resolvedEmail, setResolvedEmail] = useState<string>("");
 
-  //call when currentAccount change
+  // Call when offchainResolver changes
   useEffect(() => {
     if (!window.ethereum) return;
     if (!offchainResolver) return;
@@ -42,8 +43,9 @@ export default function ReadENS(props: Props) {
       .catch((e: Error) => {
         setErrorMessage(e.toString());
       });
-  }, [offchainResolver]);
+  }, [offchainResolver]); // Set useEffect func call condition (when offchainResolver changes)
 
+  // Call when resolve button is clicked
   async function resolver(event: React.FormEvent) {
     event.preventDefault();
     if (!window.ethereum) return;
@@ -57,44 +59,38 @@ export default function ReadENS(props: Props) {
       return;
     }
     const chainDecimal = parseInt(chainHex, 16);
-
-    console.log("provider.isMetaMask:", window.ethereum.isMetaMask);
-
     const providerWithENS = new ethers.providers.Web3Provider(window.ethereum, {
       chainId: chainDecimal,
       name: chainName,
-      ensAddress: ensRegistry, // RPC Error when setting ensAddress, but it does not affect DEMO.
+      ensAddress: ensRegistry,
     });
 
-    if (isGivenCoin(domainName)) {
-      // Resolve the specific coin address from domain name
-      const domainArray = domainName.split(".");
-      // Get first element as coin name
-      const coinName = domainArray[0];
-      const coinType = getCoinType(coinName)!;
-      // Remove coin name from domain
-      // E.g.: btc.token.eth -> token.eth
-      const newName = domainArray.slice(1, domainArray.length).join(".");
+    // Resolve the specific coin address from domain name
+    const domainArray = domainName.split(".");
+    // Get first element as coin name
+    const coinName = domainArray[0];
+    const coinType = getCoinType(coinName)!;
+    // Remove first name from domain
+    // E.g.: btc.token.eth -> token.eth
+    const newDomain = domainArray.slice(1, domainArray.length).join(".");
+    let resolved = false;
 
+    // Resolve email from new domain name
+    if (isGivenEmail(domainName)) {
       providerWithENS
-        .getResolver(newName)
+        .getResolver(newDomain)
         .then((resolver) => {
           // Get OffchainResolver contract address
           setOffchainResolver(resolver!.address);
-          // Get specify coin address
-          resolver!
-            .getAddress(coinType)
-            .then((address) => {
-              setResolvedAddress(address);
-            })
-            .catch((e: Error) => {
-              setErrorMessage(e.toString());
-            });
-          // Get owner email
+          // Try to resolve the email from domain name
           resolver!
             .getText("email")
             .then((email) => {
-              setResolvedEmail(email);
+              setResolvedData(email);
+              // The email is null when gateway server has no matching domain
+              if (email === null) {
+                setErrorMessage("[Error] No match data");
+              }
             })
             .catch((e: Error) => {
               setErrorMessage(e.toString());
@@ -103,57 +99,76 @@ export default function ReadENS(props: Props) {
         .catch((e: Error) => {
           setErrorMessage(e.toString());
         });
-    } else {
-      // Resolve ETH address only from domain name
+      resolved = true;
+      console.log("Resolving email completed");
+    }
+
+    // Resolve specify coin address from new domain name
+    if (isGivenCoin(domainName)) {
+      providerWithENS
+        .getResolver(newDomain)
+        .then((resolver) => {
+          // Get OffchainResolver contract address
+          setOffchainResolver(resolver!.address);
+          // Try to resolve the coin address from domain name
+          resolver!
+            .getAddress(coinType)
+            .then((address) => {
+              setResolvedData(address);
+              // The coin address is null when gateway server has no matching domain
+              if (address === null) {
+                setErrorMessage("[Error] No match data");
+              }
+            })
+            .catch((e: Error) => {
+              setErrorMessage(e.toString());
+            });
+        })
+        .catch((e: Error) => {
+          setErrorMessage(e.toString());
+        });
+      resolved = true;
+      console.log("Resolving coin address completed");
+    }
+
+    // Resolve default ETH address from original domain name
+    if (!resolved) {
       providerWithENS
         .getResolver(domainName)
         .then((resolver) => {
           // Get OffchainResolver contract address
           setOffchainResolver(resolver!.address);
-          // Get specify coin address
+          // Try to resolve the ETH address from domain name
           resolver!
             .getAddress()
             .then((address) => {
-              setResolvedAddress(address);
-            })
-            .catch((e: Error) => {
-              setErrorMessage(e.toString());
-            });
-          // Get owner email
-          resolver!
-            .getText("email")
-            .then((email) => {
-              setResolvedEmail(email);
+              setResolvedData(address);
+              // The ETH address is null when gateway server has no matching domain
+              if (address === null) {
+                setErrorMessage("[Error] No match data");
+              }
             })
             .catch((e: Error) => {
               setErrorMessage(e.toString());
             });
         })
+        .finally(() => {})
         .catch((e: Error) => {
           setErrorMessage(e.toString());
         });
+      resolved = true;
+      console.log("Resolving default ETH address completed");
     }
   }
 
+  // Return to render the index page
   return (
     <div>
       <form onSubmit={resolver}>
         <FormControl>
-          <FormLabel htmlFor="ensregistry">ENS Address:</FormLabel>
-          <Input
-            id="ensregistry"
-            type="text"
-            required
-            onChange={(e) => {
-              setErrorMessage("");
-              setOffchainResolver("");
-              setGatewayURL("");
-              setResolvedAddress("");
-              setENSRegistry(e.target.value);
-            }}
-            defaultValue={ensRegistry}
-          />
-          <FormLabel htmlFor="domainname">Domain Name:</FormLabel>
+          <FormLabel htmlFor="domainname">
+            Please Enter A Domain Name Here:
+          </FormLabel>
           <Input
             id="domainname"
             type="text"
@@ -162,22 +177,21 @@ export default function ReadENS(props: Props) {
               setErrorMessage("");
               setOffchainResolver("");
               setGatewayURL("");
-              setResolvedAddress("");
+              // setResolvedData(""); // Keep resolvedData for comparison next resolve
               setDomainName(e.target.value);
             }}
             defaultValue={domainName}
           />
           <FormLabel htmlFor="resolve" color={currentAccount ? "black" : "red"}>
             {currentAccount
-              ? "Click to resolve"
-              : "Disabled to resolve! Need connect to Metamask first"}
-            :
+              ? "Please Click Here To Resolve:"
+              : "Disabled To Resolve! Need Connect To MetaMask First!"}
           </FormLabel>
           <Button type="submit" isDisabled={!currentAccount}>
             Resolve
           </Button>
           <FormLabel htmlFor="offchainresolver">
-            OffchainResolver Contract Found from ENSRegistry:
+            OffchainResolver Contract Address (Get From ENSRegistry Contract):
           </FormLabel>
           <Input
             id="offchainresolver"
@@ -186,26 +200,23 @@ export default function ReadENS(props: Props) {
             disabled
           />
           <FormLabel htmlFor="gateway">
-            Gateway Server Found from OffchainResolver:
+            Gateway Server URL (Get From OffchainResolver Contract):
           </FormLabel>
           <Input id="gateway" type="text" value={gatewayURL} disabled />
-          <FormLabel htmlFor="resolvedaddress">Resolved Address:</FormLabel>
+          <FormLabel htmlFor="resolveddata">Resolved Data:</FormLabel>
           <Input
-            id="resolvedaddress"
+            id="resolveddata"
             type="text"
-            value={resolvedAddress}
-            disabled
-          />
-          <FormLabel htmlFor="resolvedemail">Resolved Email:</FormLabel>
-          <Input
-            id="resolvedemail"
-            type="text"
-            value={resolvedEmail}
+            value={
+              resolvedData !== null
+                ? resolvedData
+                : "[Error] No match data (from " + gatewayURL + ")"
+            }
             disabled
           />
           <FormLabel
             htmlFor="errormessage"
-            color={errorMessage ? "red" : "black"}
+            color={errorMessage || resolvedData === null ? "red" : "black"}
           >
             Error Message: {errorMessage}
           </FormLabel>
@@ -240,6 +251,18 @@ function getNetworkName(chainId: string): string | null {
     }
   }
   return cchainName;
+}
+
+// Determine if the first name in the domain is a name of a email
+function isGivenEmail(domain: string): boolean {
+  // Try to get the first name in the domain
+  const domainArray = domain.split(".");
+  if (domainArray.length <= 1) {
+    console.log(`[Error] Domain must have at least one dot "."`);
+    process.exit(0);
+  }
+  const firstName = domainArray[0].toUpperCase();
+  return firstName === "EMAIL";
 }
 
 // Determine if the first name in the domain is a name of a coin
