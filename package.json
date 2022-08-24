@@ -21,6 +21,8 @@
     "start-goerli:gateway": "yarn workspace @ensdomains/offchain-resolver-gateway start-goerli",
     "start:client": "yarn workspace @ensdomains/offchain-resolver-client start",
     "start-goerli:client": "yarn workspace @ensdomains/offchain-resolver-client start-goerli",
+    "start:webapp": "yarn workspace webapp dev",
+    "clean-and-build": "yarn run clean && yarn install && yarn run build",
     "test": "yarn workspaces run test",
     "lint": "yarn workspaces run lint",
     "build": "yarn workspaces run build",

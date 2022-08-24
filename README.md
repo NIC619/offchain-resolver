@@ -189,3 +189,17 @@ There are 5 main steps to using this in production:
 3.  Start up a gateway server using your name database and a signing key. Publish it on a publicly-accessible URL.
 4.  Deploy `OffchainResolver` to Ethereum, providing it with the gateway URL and list of signing key addresses.
 5.  Set the newly deployed resolver as the resolver for one or more ENS names.
+
+## Early access to the UI version
+
+You Just execute the following command to start the React server:
+
+> :warning: You still need to run the gateway server in another terminal first.
+
+```bash
+yarn start:webapp
+```
+
+Then, Open http://localhost:3000 in your browser.
+
+You can use the UI with MetaMask wallet to resolve the coin address/owner email and set a new domain owner to the ENSRegistry contract.

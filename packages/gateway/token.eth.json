@@ -1,20 +1,74 @@
 {
   "token.eth": {
     "addresses": {
-      "60": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "60": "0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D",
+      "2": "0x76a914fbd1811c727978c1a46edbe91f34250a1b0d591e88ac",
+      "0": "0x76a914e5f6c5cc85c04e9437f5a7dbfcc2d06673f0dc0888ac"
+    },
+    "text": { "email": "token@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "labs.token.eth": {
+    "addresses": {
+      "60": "0xE3c19B6865f2602f30537309e7f8D011eF99C1E0",
+      "2": "0x76a91412c00790d4a77a778a796b7c1aef16817af0a1f688ac",
+      "0": "0x76a9146b33e7fb4d6bc23b0803326fd25367e6b2ad63ed88ac"
+    },
+    "text": { "email": "labs@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "changwu.labs.token.eth": {
+    "addresses": {
+      "60": "0x58ac78a89c471605Bc1eEA8445D2759755CE02B2",
+      "2": "0x76a914f5beb82ffb90111a66da2480ec50775e6019d0a988ac",
+      "0": "0x76a914d18ec132e77c0ea61b3d1fbb9d13091ee426d61488ac"
+    },
+    "text": { "email": "irara_test@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "nic.labs.token.eth": {
+    "addresses": {
+      "60": "0x53EfeF2796C4CD031B8c09B73C120c33ED4E8Ac5",
+      "2": "0x76a9147b1d8d745bb21d8a706448380ffbef5521d7301888ac",
+      "0": "0x76a91486090cc51f97f7c106baacb772027b387ebde3e188ac"
+    },
+    "text": { "email": "nic@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "cyan.labs.token.eth": {
+    "addresses": {
+      "60": "0xA307D607Ad04622fAF7F3A173314509dC69CAb67",
+      "2": "0x76a914338e6710cd100c8ded332524d7d4bea54dbe0b5a88ac",
+      "0": "0x76a914d34d84540aa205ad70fa23592600260eddbb68cb88ac"
+    },
+    "text": { "email": "cyan@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "irara.labs.token.eth": {
+    "addresses": {
+      "60": "0xB5BE8E5e0C8729b4F4B7cF706E8388AE42D0Af83",
+      "2": "0x76a914d7a77bc3887ef64ae28c5f7ddd815d164f9eb95b88ac",
+      "0": "0x76a914229f955953765a2abd38c5c4b49608d8dcb4dea788ac"
+    },
+    "text": { "email": "irara@token.im" },
+    "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
+  },
+  "test.eth": {
+    "addresses": {
+      "60": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "2": "0x76a914c428696e02ed7f5b41a9f180367bebb2b408422088ac",
       "0": "0x76a9149661c46c94700b2cc891109fffc3a49b26d1f78e88ac"
     },
     "text": { "email": "test@token.im" },
     "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
   },
-  "*.token.eth": {
+  "*.test.eth": {
     "addresses": {
-      "60": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+      "60": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
       "2": "0x76a91474c30a9be43d3759144d1f9a8453fd8ba50480a188ac",
       "0": "0x76a914257b09874c32b4385fc93495eeeb63e64b5f81a588ac"
     },
-    "text": { "email": "wildcard@token.im" },
+    "text": { "email": "star_test@token.im" },
     "contenthash": "0xe301017012204edd2984eeaf3ddf50bac238ec95c5713fb40b5e428b508fdbe55d3b9f155ffe"
   }
 }
