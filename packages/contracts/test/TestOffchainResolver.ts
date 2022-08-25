@@ -1,9 +1,11 @@
 import { expect } from "chai"
 import { ethers } from "hardhat"
+import { Contract, Signature } from "ethers"
 import * as namehash from "eth-ens-namehash"
 import {
   defaultAbiCoder,
   SigningKey,
+  Interface,
   arrayify,
   hexConcat,
 } from "ethers/lib/utils"
@@ -11,24 +13,13 @@ import {
 const TEST_ADDRESS = "0xCAfEcAfeCAfECaFeCaFecaFecaFECafECafeCaFe"
 
 describe("OffchainResolver", function () {
-  let signer, address, resolver, snapshot, signingKey, signingAddress
-
-  async function fetcher(url, json) {
-    console.log({ url, json })
-    return {
-      jobRunId: "1",
-      statusCode: 200,
-      data: {
-        result: "0x",
-      },
-    }
-  }
+  const name = "test.eth"
+  let snapshot = ""
+  let signingKey: SigningKey, resolver: Contract
 
   before(async () => {
     signingKey = new SigningKey(ethers.utils.randomBytes(32))
-    signingAddress = ethers.utils.computeAddress(signingKey.privateKey)
-    signer = await ethers.provider.getSigner()
-    address = await signer.getAddress()
+    const signingAddress = ethers.utils.computeAddress(signingKey.privateKey)
     const OffchainResolver = await ethers.getContractFactory("OffchainResolver")
     resolver = await OffchainResolver.deploy("http://localhost:8080/", [
       signingAddress,
@@ -55,29 +46,29 @@ describe("OffchainResolver", function () {
 
   describe("resolve()", async () => {
     it("returns a CCIP-read error", async () => {
-      await expect(
-        resolver.resolve(dnsName("test.eth"), "0x")
-      ).to.be.revertedWith("OffchainLookup")
+      await expect(resolver.resolve(dnsName(name), "0x")).to.be.revertedWith(
+        "OffchainLookup"
+      )
     })
   })
 
   describe("resolveWithProof()", async () => {
-    let name, expires, iface, callData, resultData, sig
+    let expires = 0
+    let callData = ""
+    let resultData = ""
+    let sig: Signature, iface: Interface
 
     before(async () => {
-      name = "test.eth"
       expires = Math.floor(Date.now() / 1000 + 3600)
       // Encode the nested call to 'addr'
       iface = new ethers.utils.Interface([
         "function addr(bytes32) returns(address)",
       ])
-      const addrData = iface.encodeFunctionData("addr", [
-        namehash.hash("test.eth"),
-      ])
+      const addrData = iface.encodeFunctionData("addr", [namehash.hash(name)])
 
       // Encode the outer call to 'resolve'
       callData = resolver.interface.encodeFunctionData("resolve", [
-        dnsName("test.eth"),
+        dnsName(name),
         addrData,
       ])
 
@@ -143,12 +134,12 @@ describe("OffchainResolver", function () {
   })
 })
 
-function dnsName(name) {
+function dnsName(name: string): string {
   // strip leading and trailing .
   const n = name.replace(/^\.|\.$/gm, "")
 
-  var bufLen = n === "" ? 1 : n.length + 2
-  var buf = Buffer.allocUnsafe(bufLen)
+  const bufLen = n === "" ? 1 : n.length + 2
+  const buf = Buffer.allocUnsafe(bufLen)
 
   let offset = 0
   if (n.length) {
