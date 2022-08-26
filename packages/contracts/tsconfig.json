@@ -14,5 +14,5 @@
       "~/*": ["*"]
     }
   },
-  "include": ["hardhat.config.ts", "deploy/**/*", "scripts/**/*"]
+  "include": ["hardhat.config.ts", "deploy/**/*", "scripts/**/*", "test/**/*"]
 }
