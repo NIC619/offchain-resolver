@@ -22,13 +22,22 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
 });
 (async () => {
   let name = program.args[0];
+  let resolved = false;
+  // Try to get the coin/email name from first element of domain name to resolve
+  // Resolve email from new domain name
+  if (isGivenEmail(name)) {
+    resolveGivenEmail(name);
+    resolved = true;
+  }
 
-  // Try to get the coin name from first element of domain name to resolve
+  // Coin resolution is successful, print the specified coin address
   if (isGivenCoin(name)) {
-    // Coin resolution is successful, print the specified coin address
     resolveGivenCoin(name);
-  } else {
-    // Coin resolution fails, print all info
+    resolved = true;
+  }
+
+  // Coin resolution fails, print all info
+  if (!resolved) {
     resolveAllData(name);
   }
 })();
@@ -37,6 +46,18 @@ const provider = new ethers.providers.JsonRpcProvider(options.provider, {
 function addressToOnchainHex(address: string, coinType: string): string {
   const onchain = formatsByName[coinType].decoder(address);
   return `0x${onchain.toString('hex')}`;
+}
+
+// Determine if the first name in the domain is a name of a email
+function isGivenEmail(domain: string): boolean {
+  // Try to get the first name in the domain
+  const domainArray = domain.split('.');
+  if (domainArray.length <= 1) {
+    console.log(`[Error] Domain must have at least one dot "."`);
+    process.exit(0);
+  }
+  const firstName = domainArray[0].toUpperCase();
+  return firstName === 'EMAIL';
 }
 
 // Determine if the first name in the domain is a name of a coin
@@ -76,6 +97,26 @@ function getCoinType(coinName: string): number | null {
     }
   }
   return coinType;
+}
+
+// Resolve the specific Email from domain name
+async function resolveGivenEmail(domain: string) {
+  const domainArray = domain.split('.');
+
+  // Remove Email name from domain
+  // E.g.: email.token.eth -> token.eth
+  const name = domainArray.slice(1, domainArray.length).join('.');
+
+  console.log(`Resolving ${name} domain...`);
+  const resolver = await provider.getResolver(name);
+
+  if (!resolver) {
+    console.log(`[Error] No resolver contract found`);
+    process.exit(0);
+  }
+
+  const emailAddress = await resolver.getText('email');
+  console.log(`Email address: ${emailAddress}`);
 }
 
 // Resolve the specific coin address from domain name

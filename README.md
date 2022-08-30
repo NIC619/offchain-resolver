@@ -33,6 +33,10 @@ cp ./packages/gateway/.env.example ./packages/gateway/.env
 code ./packages/gateway/.env
 ```
 
+> :notebook_with_decorative_cover: Explanation of `packages/gateway/.env`:
+>
+> - PRIVATE_KEY is used by the gateway to sign the domain.
+
 First, install dependencies and build all packages:
 
 ```bash
@@ -57,9 +61,16 @@ $ eval $(grep '^PRIVATE_KEY' .env) && node dist/index.js --private-key ${PRIVATE
 Serving on port 8080 with signing address 0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D
 ```
 
-Take a look at the data in `token.eth.json` under `packages/gateway/`; it specifies addresses for the name `token.eth` and the wildcard `*.token.eth`.
+Take a look at the data in `token.eth.json` under `packages/gateway/`; it specifies addresses for the name `token.eth` and the `labs.token.eth`.
 
-Next, edit `packages/contracts/deployments/goerli/AddressRecord.json`; replacing the address of `Signer` and `Owner` with the one output when you ran the command above (0x3B7D34...).
+Next, edit `packages/contracts/deployments/goerli/AddressRecord.json`; replacing the address of `Signer` and `Owner` with the one output when you ran the command above (0x3B7D34... = Gateway & Domain Signer/Owner).
+
+```json
+{
+  "Signer": "0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D",
+  "Owner": "0x3B7D34d0E7e807A9D7aD74F094C5379aca61460D"
+}
+```
 
 And, in a new terminal, edit contracts .env file under `packages/contracts/`:
 
@@ -67,6 +78,12 @@ And, in a new terminal, edit contracts .env file under `packages/contracts/`:
 cp ./packages/contracts/.env.example ./packages/contracts/.env
 code ./packages/contracts/.env
 ```
+
+> :notebook_with_decorative_cover: Explanation of `packages/contracts/.env`:
+>
+> - MNEMONIC is used to deploy contracts.
+> - ALCHEMY_TOKEN is used to connect the blockchain network.
+> - ETHERSCAN_API_KEY is used to verify the contract code.
 
 Then, connect to `Goerli` testnet and deploy ENS registry and the offchain resolver:
 
@@ -94,13 +111,26 @@ Set fulldomain "token.eth" resolver contract, TX: https://goerli.etherscan.io/tx
 
 Take note of the address to which the ENSRegistry was deployed (0x12315f...).
 
-Finally, in the same terminal, run the example client to demonstrate resolving a name:
+And, in the same terminal, edit client .env file under `packages/client/`:
 
 ```bash
 cd ../../
-yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF token.eth
-yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
+cp ./packages/client/.env.example ./packages/client/.env
+code ./packages/client/.env
 ```
+
+> :notebook_with_decorative_cover: Explanation of `packages/client/.env`:
+>
+> - ALCHEMY_TOKEN is used to connect the blockchain network.
+
+Finally, run the example client to demonstrate resolving a name:
+
+```bash
+yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF token.eth
+yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF labs.token.eth
+```
+
+> :notebook: This address (0x12315f...) tells ethers.js the address of the ENSRegistry contract we deployed earlier in the Goerli testnet.
 
 You should see output similar to the following:
 
@@ -120,20 +150,21 @@ Email: test@token.im
 Content: ipfs://QmTeW79w7QQ6Npa3b1d5tANreCDxF2iDaAPsDvW6KtLmfB
 ✨  Done in 18.76s.
 
-% yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
+% yarn start-goerli:client --registry 0x12315f08329E9727292b055e91A5b4878E264afF labs.token.eth
 
 yarn run v1.22.19
-$ yarn workspace @ensdomains/offchain-resolver-client start-goerli --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
-$ eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN} --registry 0x12315f08329E9727292b055e91A5b4878E264afF foo.token.eth
+$ yarn workspace @ensdomains/offchain-resolver-client start-goerli --registry 0x12315f08329E9727292b055e91A5b4878E264afF labs.token.eth
+$ eval $(grep '^ALCHEMY_TOKEN' .env) && node dist/index.js --chainId 5 --chainName goerli --provider https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_TOKEN} --registry 0x12315f08329E9727292b055e91A5b4878E264afF labs.token.eth
+Resolving labs.token.eth domain...
 Resolver contract address: 0x5376350a1fA3346D50DBA8826C82aEd4Fd8a87df
-ETH address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-LTC address: LVsLJBXMpKXF3SPkpRPJZv44XVaiyW1561
-        └─ decode to onchain hex: 0x76a91474c30a9be43d3759144d1f9a8453fd8ba50480a188ac
-BTC address: 14RBPsg6mBkLSJokkzeuoCkTtoeD3nK2Kz
-        └─ decode to onchain hex: 0x76a914257b09874c32b4385fc93495eeeb63e64b5f81a588ac
-Email: wildcard@token.im
+ETH address: 0xE3c19B6865f2602f30537309e7f8D011eF99C1E0
+LTC address: LLw6U7XG323u8X1KZM79iiesXxs7PKP7J6
+        └─ decode to onchain hex: 0x76a91412c00790d4a77a778a796b7c1aef16817af0a1f688ac
+BTC address: 1AmqV2m6pmvcBTs8kXb3A8pmHsBJhSrTuY
+        └─ decode to onchain hex: 0x76a9146b33e7fb4d6bc23b0803326fd25367e6b2ad63ed88ac
+Email: labs@token.im
 Content: ipfs://QmTeW79w7QQ6Npa3b1d5tANreCDxF2iDaAPsDvW6KtLmfB
-✨  Done in 22.56s.
+✨  Done in 22.72s.
 ```
 
 Postscript: If you want to specify the eth or btc address of the token.eth domain, you can use eth + dot + domain or btc + dot + domain to resolve:
